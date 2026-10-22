@@ -52,45 +52,40 @@
   </form>
 </div></section>
 
-<section id="rvWall" style="display:none"><div class="wrap">
-  <div class="sec-title"><span class="tag">Happy Clients</span><h2>What customers say</h2></div>
-  <div class="rv-list" id="rvList"></div>
-</div></section>
 
 <footer><div class="wrap"><div>© 2026 Saurabh AI Creates · All videos are AI-generated</div></div></footer>
 
-<script src="assets/js/reviews-config.js"></script>
 <script>
 (function(){
-  const API = window.REVIEW_API_URL;
+  // Google Form: Saurabh AI Creates – Review
+  const FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSdsbw8XQ1eesN3e3HpwzW3NzgksC5vkUUw1iFFnKf7WfFTKgg/formResponse';
+  const F = { name:'entry.162040263', contact:'entry.927989608', service:'entry.1763975307', rating:'entry.1838763120',
+              review:'entry.2137173967', suggestions:'entry.1449254682', allowPublic:'entry.218398271' };
   const f = document.getElementById('rvForm'), msg = document.getElementById('rvMsg'), btn = document.getElementById('rvBtn');
-  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const say = (t, cls) => { msg.textContent = t; msg.className = 'rv-msg ' + (cls||''); };
 
   f.addEventListener('submit', async e => {
     e.preventDefault();
     const rating = (f.querySelector('input[name=rating]:checked')||{}).value;
-    const data = { action:'submit', name:f.name.value.trim(), contact:f.contact.value.trim(), service:f.service.value,
-      rating, review:f.review.value.trim(), suggestions:f.suggestions.value.trim(), allowPublic:f.allowPublic.checked };
-    if (!data.name || !rating || !data.review) return say('Please add your name, a star rating and your review.', 'err');
+    const name = f.name.value.trim(), review = f.review.value.trim();
+    if (!name || !rating || !review) return say('Please add your name, a star rating and your review.', 'err');
+    const body = new URLSearchParams();
+    body.append(F.name, name);
+    body.append(F.contact, f.contact.value.trim() || '-');
+    body.append(F.service, f.service.value);
+    body.append(F.rating, rating);
+    body.append(F.review, review);
+    body.append(F.suggestions, f.suggestions.value.trim() || '-');
+    body.append(F.allowPublic, f.allowPublic.checked ? 'Yes' : 'No');
     btn.disabled = true; btn.textContent = 'Submitting…'; say('');
     try {
-      const r = await fetch(API, { method:'POST', body:JSON.stringify(data) }).then(r => r.json());
-      if (!r.ok) throw new Error(r.error);
+      await fetch(FORM, { method:'POST', mode:'no-cors', body });
       f.innerHTML = '<div class="sec-title" style="margin:0"><h2>Thank you! 🙏</h2><p>Your review has been received.</p></div>';
     } catch (err) {
-      say('Could not submit right now. Please try again or DM us on Instagram.', 'err');
+      say('Could not submit right now. Please check your internet and try again.', 'err');
       btn.disabled = false; btn.textContent = 'Submit Review';
     }
   });
-
-  fetch(API + '?action=public').then(r => r.json()).then(r => {
-    if (!r.ok || !r.reviews.length) return;
-    document.getElementById('rvList').innerHTML = r.reviews.slice(0, 30).map(v =>
-      `<div class="rv-item"><div class="s">${'★'.repeat(v.rating)}${'☆'.repeat(5-v.rating)}</div>
-       <p>“${esc(v.review)}”</p><small>— ${esc(v.name)} · ${esc(v.service)}</small></div>`).join('');
-    document.getElementById('rvWall').style.display = '';
-  }).catch(()=>{});
 })();
 </script>
 </body>
