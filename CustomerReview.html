@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Share Your Review – Saurabh AI Creates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header><div class="wrap nav">
+  <a href="index.html" class="brand">SAURABH<span>.AICREATES</span></a>
+</div></header>
+
+<section><div class="wrap">
+  <div class="sec-title"><span class="tag">Your Feedback</span><h2>How did we do?</h2><p>Thank you for choosing us. Your review helps us improve and helps other families trust us.</p></div>
+
+  <form class="rv-box" id="rvForm" novalidate>
+    <label for="name">Your name *</label>
+    <input id="name" name="name" maxlength="80" required>
+
+    <label for="contact">Instagram / WhatsApp (optional, only we see this)</label>
+    <input id="contact" name="contact" maxlength="100">
+
+    <label for="service">What did we make for you?</label>
+    <select id="service" name="service">
+      <option>Wedding Invitation</option><option>Birthday Invitation</option>
+      <option>Family Story Video</option><option>Devotional Video</option><option>Other</option>
+    </select>
+
+    <label>Rating *</label>
+    <div class="stars">
+      <input type="radio" name="rating" id="r5" value="5"><label for="r5" title="Excellent">★</label>
+      <input type="radio" name="rating" id="r4" value="4"><label for="r4" title="Good">★</label>
+      <input type="radio" name="rating" id="r3" value="3"><label for="r3" title="Okay">★</label>
+      <input type="radio" name="rating" id="r2" value="2"><label for="r2" title="Poor">★</label>
+      <input type="radio" name="rating" id="r1" value="1"><label for="r1" title="Bad">★</label>
+    </div>
+
+    <label for="review">Your review *</label>
+    <textarea id="review" name="review" maxlength="2000" required placeholder="What did you and your family like?"></textarea>
+
+    <label for="suggestions">Anything we can improve? (private)</label>
+    <textarea id="suggestions" name="suggestions" maxlength="2000"></textarea>
+
+    <label class="rv-check"><input type="checkbox" id="allowPublic" checked> You can show my name and review on this page</label>
+
+    <button class="btn btn-gold" type="submit" id="rvBtn">Submit Review</button>
+    <div class="rv-msg" id="rvMsg"></div>
+  </form>
+</div></section>
+
+<section id="rvWall" style="display:none"><div class="wrap">
+  <div class="sec-title"><span class="tag">Happy Clients</span><h2>What customers say</h2></div>
+  <div class="rv-list" id="rvList"></div>
+</div></section>
+
+<footer><div class="wrap"><div>© 2026 Saurabh AI Creates · All videos are AI-generated</div></div></footer>
+
+<script src="assets/js/reviews-config.js"></script>
+<script>
+(function(){
+  const API = window.REVIEW_API_URL;
+  const f = document.getElementById('rvForm'), msg = document.getElementById('rvMsg'), btn = document.getElementById('rvBtn');
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const say = (t, cls) => { msg.textContent = t; msg.className = 'rv-msg ' + (cls||''); };
+
+  f.addEventListener('submit', async e => {
+    e.preventDefault();
+    const rating = (f.querySelector('input[name=rating]:checked')||{}).value;
+    const data = { action:'submit', name:f.name.value.trim(), contact:f.contact.value.trim(), service:f.service.value,
+      rating, review:f.review.value.trim(), suggestions:f.suggestions.value.trim(), allowPublic:f.allowPublic.checked };
+    if (!data.name || !rating || !data.review) return say('Please add your name, a star rating and your review.', 'err');
+    btn.disabled = true; btn.textContent = 'Submitting…'; say('');
+    try {
+      const r = await fetch(API, { method:'POST', body:JSON.stringify(data) }).then(r => r.json());
+      if (!r.ok) throw new Error(r.error);
+      f.innerHTML = '<div class="sec-title" style="margin:0"><h2>Thank you! 🙏</h2><p>Your review has been received.</p></div>';
+    } catch (err) {
+      say('Could not submit right now. Please try again or DM us on Instagram.', 'err');
+      btn.disabled = false; btn.textContent = 'Submit Review';
+    }
+  });
+
+  fetch(API + '?action=public').then(r => r.json()).then(r => {
+    if (!r.ok || !r.reviews.length) return;
+    document.getElementById('rvList').innerHTML = r.reviews.slice(0, 30).map(v =>
+      `<div class="rv-item"><div class="s">${'★'.repeat(v.rating)}${'☆'.repeat(5-v.rating)}</div>
+       <p>“${esc(v.review)}”</p><small>— ${esc(v.name)} · ${esc(v.service)}</small></div>`).join('');
+    document.getElementById('rvWall').style.display = '';
+  }).catch(()=>{});
+})();
+</script>
+</body>
+</html>
