@@ -53,6 +53,11 @@
 </div></section>
 
 
+<section id="rvWall" style="display:none"><div class="wrap">
+  <div class="sec-title"><span class="tag">Happy Clients</span><h2>What Clients Say</h2></div>
+  <div class="rv-list" id="rvList"></div>
+</div></section>
+
 <footer><div class="wrap"><div>© 2026 Saurabh AI Creates · All videos are AI-generated</div></div></footer>
 
 <script>
@@ -88,5 +93,7 @@
   });
 })();
 </script>
+<script src="assets/js/reviews.js"></script>
+<script>renderReviews(document.getElementById('rvList'), document.getElementById('rvWall'), 30);</script>
 </body>
 </html>
