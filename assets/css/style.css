@@ -133,3 +133,12 @@ table.adm th{background:var(--bg2);color:var(--gold);font-weight:600}
 .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.78rem;border:1px solid var(--line);cursor:pointer;background:none;color:var(--muted);font-family:inherit}
 .pill.on{background:#1f3b26;color:#7fd88f;border-color:#2f5a3a}
 .btn-sm{padding:8px 16px;font-size:.85rem}
+
+/* ===== client video page ===== */
+.client-block{margin-bottom:48px;scroll-margin-top:84px}
+.client-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:18px}
+.client-head h3{font-family:"Cinzel",serif;color:var(--gold2);font-size:1.25rem}
+.client-head span{color:var(--muted);font-size:.85rem;white-space:nowrap}
+a.tab{display:inline-block}
+.vid:has(video){padding:0;border-style:solid;background:#000}
+.vid video{object-fit:contain}

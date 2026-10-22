@@ -17,6 +17,7 @@
   <ul>
     <li><a href="#pricing" class="active">Pricing</a></li>
     <li class="hide-sm"><a href="#samples">Samples</a></li>
+    <li><a href="clients.html">Clients</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li class="hide-sm"><a href="privacy.html">Privacy</a></li>
   </ul>
@@ -113,23 +114,24 @@
 
 <section id="samples"><div class="wrap">
   <div class="sec-title"><span class="tag">Our Work</span><h2>Sample Videos</h2><p>More samples on our Instagram</p></div>
-  <div class="gallery">
-    <!-- Replace each block with: <div class="vid"><video src="videos/wedding/sample1.mp4" controls playsinline preload="none" poster="images/posters/sample1.jpg"></video></div> -->
+  <div class="gallery" id="ourWork">
     <div class="vid">Wedding invite<br>sample coming soon</div>
     <div class="vid">Save The Date<br>sample coming soon</div>
     <div class="vid">Birthday invite<br>sample coming soon</div>
     <div class="vid">Family story film<br>sample coming soon</div>
   </div>
-  <div class="btns" style="margin-top:26px"><a class="btn btn-ghost" href="https://instagram.com/saurabh.aicreates" target="_blank" rel="noopener">View on Instagram →</a></div>
+  <div class="btns" style="margin-top:26px"><a class="btn btn-gold" href="clients.html">See Client Work →</a><a class="btn btn-ghost" href="https://instagram.com/saurabh.aicreates" target="_blank" rel="noopener">View on Instagram →</a></div>
 </div></section>
 
 <footer><div class="wrap">
-  <div class="links"><a href="#pricing">Pricing</a><a href="faq.html">FAQ</a><a href="privacy.html">Privacy Policy</a><a href="https://instagram.com/saurabh.aicreates" target="_blank" rel="noopener">Instagram</a></div>
+  <div class="links"><a href="#pricing">Pricing</a><a href="clients.html">Clients</a><a href="faq.html">FAQ</a><a href="privacy.html">Privacy Policy</a><a href="https://instagram.com/saurabh.aicreates" target="_blank" rel="noopener">Instagram</a></div>
   <div>© 2026 Saurabh AI Creates · All videos are AI-generated</div>
 </div></footer>
 <a class="float-dm" href="https://ig.me/m/saurabh.aicreates" target="_blank" rel="noopener">📩 DM to Order</a>
 
+<script src="assets/js/videos.js"></script>
 <script>
+renderOurWork(document.getElementById('ourWork'));
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
