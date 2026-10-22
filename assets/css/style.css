@@ -122,18 +122,6 @@ footer .links{display:flex;gap:18px;justify-content:center;margin-bottom:10px;fl
 .rv-item .s{color:var(--gold);letter-spacing:2px}
 .rv-item p{margin:10px 0;color:var(--text)}
 .rv-item small{color:var(--muted)}
-.adm-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
-.adm-stats{display:flex;gap:12px;flex-wrap:wrap}
-.adm-stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-size:.88rem;color:var(--muted)}
-.adm-stat b{color:var(--gold);font-size:1.1rem;display:block}
-.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius)}
-table.adm{width:100%;border-collapse:collapse;font-size:.88rem;min-width:820px}
-table.adm th,table.adm td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-table.adm th{background:var(--bg2);color:var(--gold);font-weight:600}
-.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.78rem;border:1px solid var(--line);cursor:pointer;background:none;color:var(--muted);font-family:inherit}
-.pill.on{background:#1f3b26;color:#7fd88f;border-color:#2f5a3a}
-.btn-sm{padding:8px 16px;font-size:.85rem}
-
 /* ===== client video page ===== */
 .client-block{margin-bottom:48px;scroll-margin-top:84px}
 .client-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:18px}
