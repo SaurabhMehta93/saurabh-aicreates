@@ -40,7 +40,7 @@
       if (!rows.length) return;
       trackEl.innerHTML = rows.map(r => {
         const rating = Math.max(0, Math.min(5, parseInt(r[3], 10) || 0));
-        return `<article class="review-slide"><div class="review-google"><span class="google-g">G</span> CLIENT REVIEW</div><div class="review-stars" aria-label="${rating} out of 5 stars">${'★'.repeat(rating)}${'☆'.repeat(5-rating)}</div><p>“${esc(r[4])}”</p><div class="review-author"><strong>${esc(r[1])}</strong><span>${r[2] ? esc(r[2]) : 'Verified Client'}</span></div></article>`;
+        return `<article class="review-slide"><div class="review-client-heading"><strong>${esc(r[1])}</strong><span>${r[2] ? esc(r[2]) : 'Verified Client'}</span></div><div class="review-stars" aria-label="${rating} out of 5 stars">${'★'.repeat(rating)}${'☆'.repeat(5-rating)}</div><p>“${esc(r[4])}”</p></article>`;
       }).join('');
       const slides = [...trackEl.children];
       let index = 0, timer;
