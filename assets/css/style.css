@@ -18,7 +18,7 @@ header{position:sticky;top:0;z-index:20;background:rgba(11,11,18,.88);backdrop-f
 .nav ul{list-style:none;display:flex;gap:22px}
 .nav ul a{color:var(--muted);font-size:.92rem}
 .nav ul a:hover,.nav ul a.active{color:var(--gold2)}
-@media(max-width:640px){.nav ul{gap:14px}.nav ul li.hide-sm{display:none}}
+@media(max-width:640px){.nav{gap:10px}.nav ul{gap:12px;max-width:68%;overflow-x:auto;white-space:nowrap;scrollbar-width:none}.nav ul::-webkit-scrollbar{display:none}.nav ul a{font-size:.82rem}}
 
 /* hero */
 .hero{padding:80px 0 60px;text-align:center;background:radial-gradient(ellipse at top,#2a1f0d 0%,transparent 60%)}
