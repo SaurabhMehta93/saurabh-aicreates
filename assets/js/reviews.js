@@ -32,4 +32,39 @@
       sectionEl.style.display = '';
     } catch (e) { /* no reviews shown if sheet unreachable */ }
   };
+  window.renderReviewSlider = async function (sectionEl, trackEl, dotsEl) {
+    if (!sectionEl || !trackEl || !dotsEl) return;
+    try {
+      const txt = await fetch(CSV_URL, { cache: 'no-store' }).then(r => { if (!r.ok) throw 0; return r.text(); });
+      const rows = parseCSV(txt).slice(1).filter(r => r[1] && r[4]);
+      if (!rows.length) return;
+      trackEl.innerHTML = rows.map(r => {
+        const rating = Math.max(0, Math.min(5, parseInt(r[3], 10) || 0));
+        return `<article class="review-slide"><div class="review-google"><span class="google-g">G</span> CLIENT REVIEW</div><div class="review-stars" aria-label="${rating} out of 5 stars">${'★'.repeat(rating)}${'☆'.repeat(5-rating)}</div><p>“${esc(r[4])}”</p><div class="review-author"><strong>${esc(r[1])}</strong><span>${r[2] ? esc(r[2]) : 'Verified Client'}</span></div></article>`;
+      }).join('');
+      const slides = [...trackEl.children];
+      let index = 0, timer;
+      const visible = () => window.matchMedia('(max-width: 680px)').matches ? 1 : (window.matchMedia('(max-width: 980px)').matches ? 2 : 3);
+      const maxIndex = () => Math.max(0, slides.length - visible());
+      const dotsCount = () => maxIndex() + 1;
+      const render = () => {
+        index = Math.min(index, maxIndex());
+        const width = slides[0].getBoundingClientRect().width;
+        const gap = parseFloat(getComputedStyle(trackEl).gap) || 0;
+        trackEl.style.transform = `translateX(-${index * (width + gap)}px)`;
+        dotsEl.innerHTML = Array.from({length:dotsCount()}, (_,i) => `<button type="button" class="review-dot ${i===index?'active':''}" aria-label="Go to review group ${i+1}" data-index="${i}"></button>`).join('');
+        dotsEl.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => { index=Number(btn.dataset.index); render(); restart(); }));
+      };
+      const step = delta => { index = (index + delta + dotsCount()) % dotsCount(); render(); };
+      sectionEl.querySelector('.review-prev').addEventListener('click', () => {step(-1);restart();});
+      sectionEl.querySelector('.review-next').addEventListener('click', () => {step(1);restart();});
+      const restart = () => { clearInterval(timer); if (dotsCount()>1) timer=setInterval(()=>step(1),5000); };
+      sectionEl.hidden = false;
+      render(); restart();
+      window.addEventListener('resize', render);
+      sectionEl.addEventListener('mouseenter', () => clearInterval(timer));
+      sectionEl.addEventListener('mouseleave', restart);
+    } catch (e) { console.warn('Could not load client reviews', e); }
+  };
+
 })();
