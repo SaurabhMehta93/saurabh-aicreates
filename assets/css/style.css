@@ -74,6 +74,7 @@ section{padding:60px 0}
 .combo{background:linear-gradient(135deg,#2a1f0d,#181826);border:1px solid var(--gold);border-radius:var(--radius);padding:32px;display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:30px}
 .combo h3{font-family:"Cinzel",serif;font-size:1.5rem}
 .combo p{color:var(--muted)}
+.combo>div:last-child{text-align:left!important;margin-right:auto}
 
 /* table */
 .table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden}
