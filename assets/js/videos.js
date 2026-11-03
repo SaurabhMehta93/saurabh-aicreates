@@ -39,24 +39,69 @@
   }
 
   const card = p => `<div class="vid video-card"><button class="video-launch" type="button" data-video-src="${esc(url(p))}" aria-label="Play video"><span class="video-launch-icon">▶</span><span>Play video</span></button><p class="video-error">This video could not be loaded. Please try again later.</p></div>`;
+  function createVideoCover(button) {
+    if (button.dataset.coverAttempted) return;
+    button.dataset.coverAttempted = 'true';
+    const preview = document.createElement('video');
+    preview.muted = true;
+    preview.playsInline = true;
+    preview.preload = 'metadata';
+    preview.src = button.dataset.videoSrc;
+    preview.addEventListener('loadedmetadata', () => {
+      try { preview.currentTime = Math.min(1, Math.max(0, preview.duration * 0.08)); }
+      catch (_) { /* Some encodings only permit seeking after more data arrives. */ }
+    }, {once:true});
+    preview.addEventListener('seeked', () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = preview.videoWidth || 360;
+        canvas.height = preview.videoHeight || 640;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(preview, 0, 0, canvas.width, canvas.height);
+        button.style.setProperty('--video-cover', 'url("' + canvas.toDataURL('image/jpeg', 0.78) + '")');
+        button.classList.add('has-video-cover');
+      } catch (error) {
+        console.warn('Could not generate a video cover for', button.dataset.videoSrc, error);
+      } finally {
+        preview.removeAttribute('src');
+        preview.load();
+        preview.remove();
+      }
+    }, {once:true});
+    preview.addEventListener('error', () => {
+      button.closest('.vid')?.classList.add('video-unavailable');
+      preview.remove();
+    }, {once:true});
+    preview.load();
+  }
   function bindVideoErrors(el) {
-    el.querySelectorAll('.video-launch').forEach(button => {
-      button.addEventListener('click', () => {
-        const card = button.closest('.vid');
-        const video = document.createElement('video');
-        video.controls = true;
-        video.playsInline = true;
-        video.preload = 'metadata';
-        video.setAttribute('aria-label', 'Client project video');
-        const source = document.createElement('source');
-        source.src = button.dataset.videoSrc + '#t=0.1';
-        source.type = 'video/mp4';
-        video.appendChild(source);
-        video.addEventListener('error', () => card.classList.add('video-unavailable'));
-        button.replaceWith(video);
-        video.play().catch(() => { video.controls = true; });
-      });
-    });
+    const buttons = [...el.querySelectorAll('.video-launch')];
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          createVideoCover(entry.target);
+          observer.unobserve(entry.target);
+        }
+      }), {rootMargin:'180px'});
+      buttons.forEach(button => observer.observe(button));
+    } else {
+      buttons.slice(0, 3).forEach(createVideoCover);
+    }
+    buttons.forEach(button => button.addEventListener('click', () => {
+      const card = button.closest('.vid');
+      const video = document.createElement('video');
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = 'metadata';
+      video.setAttribute('aria-label', 'Client project video');
+      const source = document.createElement('source');
+      source.src = button.dataset.videoSrc + '#t=0.1';
+      source.type = 'video/mp4';
+      video.appendChild(source);
+      video.addEventListener('error', () => card.classList.add('video-unavailable'));
+      button.replaceWith(video);
+      video.play().catch(() => { video.controls = true; });
+    }));
   }
   window.renderOurWork = async function (el) {
     if (!el) return;
