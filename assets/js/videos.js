@@ -35,11 +35,25 @@
     return groups;
   }
 
-  const card = p => `<div class="vid"><video src="${url(p)}#t=0.1" controls playsinline preload="metadata"></video></div>`;
+  const card = p => `<div class="vid"><video controls playsinline preload="metadata"><source src="${url(p)}#t=0.1" type="video/mp4">Your browser does not support HTML5 video.</video><p class="video-error">This video could not be loaded. Please try again later.</p></div>`;
+  function bindVideoErrors(el) {
+    el.querySelectorAll('video').forEach(video => {
+      video.addEventListener('error', () => video.closest('.vid')?.classList.add('video-unavailable'));
+    });
+  }
   window.renderOurWork = async function (el) {
-    const g = await listVideos();
-    const html = Object.keys(OUR_WORK).filter(k => g[k]).map(k => g[k].map(card).join('')).join('');
-    if (html) el.innerHTML = html;
+    if (!el) return;
+    el.innerHTML = '<p class="note">Loading videos…</p>';
+    try {
+      const g = await listVideos();
+      const groups = Object.keys(g).filter(k => k !== 'invitation_videos' && g[k].length);
+      if (!groups.length) { el.innerHTML = '<p class="note">Our work videos will appear here soon.</p>'; return; }
+      el.innerHTML = groups.map(k => `<div class="work-block"><div class="client-head"><h3>${esc(CLIENT_NAMES[k] || pretty(k))}</h3><span>${g[k].length} video${g[k].length > 1 ? 's' : ''}</span></div><div class="gallery">${g[k].map(card).join('')}</div></div>`).join('');
+      bindVideoErrors(el);
+    } catch (error) {
+      el.innerHTML = '<p class="note">Unable to load videos right now. Please refresh the page.</p>';
+      console.error(error);
+    }
   };
   window.renderClients = async function (el, navEl) {
     const g = await listVideos();
@@ -49,6 +63,7 @@
     const id = k => 'c-' + k.toLowerCase().replace(/[^a-z0-9]+/g,'-');
     if (navEl) navEl.innerHTML = clients.map(k => `<a class="tab" href="#${id(k)}">${esc(name(k))}</a>`).join('');
     el.innerHTML = clients.map(k => `<div class="client-block" id="${id(k)}"><div class="client-head"><h3>${esc(name(k))}</h3><span>${g[k].length} video${g[k].length>1?'s':''}</span></div><div class="gallery">${g[k].map(card).join('')}</div></div>`).join('');
+    bindVideoErrors(el);
   };
 
   function titleFromFolder(folder) { return pretty(folder); }
