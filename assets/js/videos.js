@@ -14,12 +14,15 @@
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const url = p => p.split('/').map(encodeURIComponent).join('/');
 
+  let treePathsPromise;
   async function getTreePaths() {
-    const r = await fetch(`https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`);
-    if (!r.ok) throw new Error('Could not load the GitHub media list.');
-    const data = await r.json();
-    if (data.truncated) throw new Error('The GitHub media list is too large to read completely.');
-    return (data.tree || []).filter(x => x.type === 'blob').map(x => x.path);
+    if (!treePathsPromise) {
+      treePathsPromise = fetch(`https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`)
+        .then(r => { if (!r.ok) throw new Error('Could not load the GitHub media list.'); return r.json(); })
+        .then(data => { if (data.truncated) throw new Error('The GitHub media list is too large to read completely.'); return (data.tree || []).filter(x => x.type === 'blob').map(x => x.path); })
+        .catch(error => { treePathsPromise = null; throw error; });
+    }
+    return treePathsPromise;
   }
 
   async function listVideos() {
@@ -71,6 +74,33 @@
     const labels = {'1_wedding':'Wedding Invitations','2_save_the_date':'Save The Date','3_engagement':'Engagement','4_shop_opening':'Shop Opening','5_birthday':'Birthday'};
     return labels[folder] || pretty(folder);
   }
+  window.renderInvitationPreview = async function (el) {
+    if (!el) return;
+    try {
+      const paths = await getTreePaths();
+      const base = 'videos/invitation_videos/templates/';
+      const files = paths.filter(p => p.startsWith(base));
+      const videos = files.filter(p => EXT.test(p));
+      const templates = videos.map(videoPath => {
+        const parts = videoPath.slice(base.length).split('/');
+        if (parts.length !== 3) return null;
+        const category = parts[0], folder = parts[1];
+        const siblings = files.filter(p => p.startsWith(base + category + '/' + folder + '/'));
+        const cover = siblings.find(p => /\/IMG_Cover\.(png|jpe?g|webp)$/i.test(p)) || siblings.find(p => /\/IMG_Cover_Final\.(png|jpe?g|webp)$/i.test(p)) || siblings.find(p => IMAGE_EXT.test(p));
+        return {category, folder, title:titleFromFolder(folder), video:videoPath, cover};
+      }).filter(t => t && t.cover).sort((a,b) => a.category.localeCompare(b.category) || a.folder.localeCompare(b.folder, undefined, {numeric:true}));
+      const featured = [...new Set(templates.map(t => t.category))].map(c => templates.find(t => t.category === c)).slice(0, 3);
+      if (!featured.length) { el.innerHTML = '<p class="note">Invitation previews will appear here soon.</p>'; return; }
+      el.innerHTML = featured.map(t => '<article class="template-card"><div class="template-media"><img src="' + url(t.cover) + '" alt="' + esc(t.title) + ' invitation cover" loading="lazy" decoding="async"><button class="template-play" type="button" aria-label="Play ' + esc(t.title) + ' video">▶</button></div><div class="template-info"><h4>' + esc(t.title) + '</h4><span>' + esc(categoryFromFolder(t.category)) + '</span></div></article>').join('');
+      el.querySelectorAll('.template-play').forEach((button, i) => button.addEventListener('click', () => {
+        const t = featured[i], media = button.closest('.template-media'), video = document.createElement('video');
+        video.controls = true; video.playsInline = true; video.preload = 'none'; video.src = url(t.video) + '#t=0.1';
+        video.setAttribute('aria-label', t.title + ' invitation video');
+        media.querySelector('img').hidden = true; button.hidden = true; media.appendChild(video);
+        video.play().catch(() => { video.controls = true; });
+      }));
+    } catch (error) { el.innerHTML = '<p class="note">Unable to load invitation previews right now.</p>'; console.error(error); }
+  };
   window.renderInvitationTemplates = async function (el, navEl) {
     if (!el) return;
     el.innerHTML = '<p class="note">Loading invitation templates…</p>';
@@ -98,7 +128,7 @@
         return `<section class="template-category" data-category="${esc(category)}"><div class="client-head"><h3>${esc(categoryFromFolder(category))}</h3><span>${items.length} templates</span></div><div class="template-grid">${items.map(t => `
           <article class="template-card">
             <div class="template-media">
-              ${t.cover ? `<img src="${url(t.cover)}" alt="${esc(t.title)} invitation cover" loading="lazy">` : '<div class="template-no-cover">Preview unavailable</div>'}
+              ${t.cover ? `<img src="${url(t.cover)}" alt="${esc(t.title)} invitation cover" loading="lazy" decoding="async">` : '<div class="template-no-cover">Preview unavailable</div>'}
               <button class="template-play" type="button" aria-label="Play ${esc(t.title)} video">▶</button>
               <video src="${url(t.video)}#t=0.1" controls playsinline preload="none" aria-label="${esc(t.title)} invitation video"></video>
             </div>
