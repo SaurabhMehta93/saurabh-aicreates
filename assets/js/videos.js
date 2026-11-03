@@ -10,7 +10,7 @@
   };
   const EXT = /\.(mp4|webm|mov|m4v)$/i;
   const IMAGE_EXT = /\.(png|jpe?g|webp)$/i;
-  const pretty = s => s.replace(/^\d+[_-]?/, '').replace(/^[A-Z]+\d*[_-]?/i, '').replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  const pretty = s => s.replace(/^(?:\d+|[A-Z]+\d+)[_-]/i, '').replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const url = p => p.split('/').map(encodeURIComponent).join('/');
 
