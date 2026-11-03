@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+<script>if(new URLSearchParams(location.search).get("embed")==="1")document.documentElement.classList.add("embedded");</script>
 <header><div class="wrap nav">
   <a href="index.html" class="brand">SAURABH<span>.AICREATES</span></a>
   <ul>
@@ -34,6 +35,6 @@
 </div></footer>
 <a class="float-dm" href="https://ig.me/m/saurabh.aicreates" target="_blank" rel="noopener">📩 DM to Order</a>
 <script src="assets/js/videos.js"></script>
-<script>renderInvitationTemplates(document.getElementById('invitationTemplates'), document.getElementById('templateFilters'));</script>
+<script>renderInvitationTemplates(document.getElementById('invitationTemplates'), document.getElementById('templateFilters')).then(() => { if (document.documentElement.classList.contains('embedded')) { const sendHeight = () => parent.postMessage({type:'invitation-gallery-height',height:document.documentElement.scrollHeight}, location.origin); sendHeight(); new ResizeObserver(sendHeight).observe(document.body); } });</script>
 </body>
 </html>
