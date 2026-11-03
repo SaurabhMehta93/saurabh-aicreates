@@ -108,7 +108,8 @@
     el.innerHTML = '<p class="note">Loading videos…</p>';
     try {
       const g = await listVideos();
-      const groups = Object.keys(g).filter(k => k !== 'invitation_videos' && g[k].length);
+      const HIDDEN_WORK_SECTIONS = new Set(['birthday']); // Temporarily hidden until more Birthday portfolio videos are ready.
+      const groups = Object.keys(g).filter(k => k !== 'invitation_videos' && !HIDDEN_WORK_SECTIONS.has(k.trim().toLowerCase()) && g[k].length);
       if (!groups.length) { el.innerHTML = '<p class="note">Our work videos will appear here soon.</p>'; return; }
       el.innerHTML = groups.map(k => `<div class="work-block"><div class="client-head"><h3>${esc(CLIENT_NAMES[k] || pretty(k))}</h3><span>${g[k].length} video${g[k].length > 1 ? 's' : ''}</span></div><div class="gallery">${g[k].map(card).join('')}</div></div>`).join('');
       bindVideoErrors(el);
