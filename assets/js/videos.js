@@ -38,10 +38,24 @@
     return groups;
   }
 
-  const card = p => `<div class="vid"><video controls playsinline preload="none"><source src="${url(p)}#t=0.1" type="video/mp4">Your browser does not support HTML5 video.</video><p class="video-error">This video could not be loaded. Please try again later.</p></div>`;
+  const card = p => `<div class="vid video-card"><button class="video-launch" type="button" data-video-src="${esc(url(p))}" aria-label="Play video"><span class="video-launch-icon">▶</span><span>Play video</span></button><p class="video-error">This video could not be loaded. Please try again later.</p></div>`;
   function bindVideoErrors(el) {
-    el.querySelectorAll('video').forEach(video => {
-      video.addEventListener('error', () => video.closest('.vid')?.classList.add('video-unavailable'));
+    el.querySelectorAll('.video-launch').forEach(button => {
+      button.addEventListener('click', () => {
+        const card = button.closest('.vid');
+        const video = document.createElement('video');
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        video.setAttribute('aria-label', 'Client project video');
+        const source = document.createElement('source');
+        source.src = button.dataset.videoSrc + '#t=0.1';
+        source.type = 'video/mp4';
+        video.appendChild(source);
+        video.addEventListener('error', () => card.classList.add('video-unavailable'));
+        button.replaceWith(video);
+        video.play().catch(() => { video.controls = true; });
+      });
     });
   }
   window.renderOurWork = async function (el) {

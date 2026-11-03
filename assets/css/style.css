@@ -186,3 +186,12 @@ html.embedded .invitation-cta{margin-bottom:0}
 .invitation-preview .template-media video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
 .invitation-more{margin-top:26px}
 @media(max-width:640px){.invitation-preview{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.invitation-preview .template-card{max-width:none}.invitation-preview .template-card:last-child:nth-child(odd){grid-column:1/-1;width:calc(50% - 6px)}}
+
+/* Client gallery: show a clear play state and fetch each MP4 only on demand */
+.vid.video-card{position:relative;padding:0;border-style:solid;background:linear-gradient(145deg,#242431,#101018);cursor:pointer}
+.vid.video-card .video-launch{position:absolute;inset:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;border:0;background:radial-gradient(circle at 50% 42%,rgba(224,181,92,.16),transparent 48%),linear-gradient(145deg,#242431,#101018);color:var(--muted);font:600 .88rem Poppins, sans-serif;cursor:pointer}
+.video-launch-icon{width:62px;height:62px;display:grid;place-items:center;padding-left:4px;border:1px solid rgba(255,255,255,.75);border-radius:50%;background:rgba(8,8,13,.65);color:#fff;font-size:1.5rem;transition:background .2s,color .2s,transform .2s}
+.video-launch:hover .video-launch-icon{background:var(--gold);color:#17120a;transform:scale(1.06);border-color:var(--gold)}
+.vid.video-card video{display:block;width:100%;height:100%;object-fit:contain;background:#000;border-radius:inherit}
+.vid.video-card.video-unavailable .video-launch{display:none}
+.vid.video-card.video-unavailable .video-error{display:block;align-self:center;margin:0;padding:16px}
