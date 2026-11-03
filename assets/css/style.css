@@ -159,3 +159,14 @@ a.tab{display:inline-block}
 .invitation-cta h2{font-family:"Cinzel",serif;font-size:clamp(1.5rem,4vw,2rem)}
 .invitation-cta p{color:var(--muted);margin:8px auto 20px;max-width:620px}
 @media(max-width:640px){.template-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.template-info{padding:11px}.template-info h4{font-size:.86rem}.template-filters{top:64px}.template-filters .tab{padding:8px 13px;font-size:.82rem}}
+
+
+/* Invitation gallery embedded inside the home page */
+.home-invitation-section{background:var(--bg2)}
+.invitation-gallery-frame{display:block;width:100%;height:700px;border:0;border-radius:var(--radius);background:var(--bg);overflow:hidden}
+html.embedded,html.embedded body{background:transparent}
+html.embedded header,html.embedded footer,html.embedded .float-dm,html.embedded .invitation-hero{display:none!important}
+html.embedded .invitation-section{padding:0}
+html.embedded .invitation-section>.wrap{max-width:none;padding:0}
+html.embedded .template-filters{top:0;border-radius:12px}
+html.embedded .invitation-cta{margin-bottom:0}
