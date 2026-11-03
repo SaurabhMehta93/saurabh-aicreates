@@ -38,7 +38,7 @@
     return groups;
   }
 
-  const card = p => `<div class="vid"><video controls playsinline preload="metadata"><source src="${url(p)}#t=0.1" type="video/mp4">Your browser does not support HTML5 video.</video><p class="video-error">This video could not be loaded. Please try again later.</p></div>`;
+  const card = p => `<div class="vid"><video controls playsinline preload="none"><source src="${url(p)}#t=0.1" type="video/mp4">Your browser does not support HTML5 video.</video><p class="video-error">This video could not be loaded. Please try again later.</p></div>`;
   function bindVideoErrors(el) {
     el.querySelectorAll('video').forEach(video => {
       video.addEventListener('error', () => video.closest('.vid')?.classList.add('video-unavailable'));
