@@ -25,6 +25,16 @@
   <div class="sec-title"><span class="tag">Client Work</span><h2>Made For Our Clients</h2><p>Real projects we created for brands, hospitals, devotional groups and families</p></div>
   <div class="tabs" id="clientNav"></div>
   <div id="clientList"><p class="note" style="text-align:center">Loading videos…</p></div>
+  <section class="client-reviews" id="clientReviews" hidden>
+    <div class="sec-title"><span class="tag">Happy Clients</span><h2>What Clients Say</h2><p>Real feedback from our customers</p></div>
+    <div class="review-slider">
+      <button class="review-arrow review-prev" type="button" aria-label="Previous reviews">‹</button>
+      <div class="review-viewport"><div class="review-track" id="clientReviewTrack"></div></div>
+      <button class="review-arrow review-next" type="button" aria-label="Next reviews">›</button>
+    </div>
+    <div class="review-dots" id="clientReviewDots"></div>
+    <p class="review-source">Customer reviews shared with permission</p>
+  </section>
   <div class="btns" style="margin-top:40px"><a class="btn btn-gold" href="https://ig.me/m/saurabh.aicreates" target="_blank" rel="noopener">📩 Want one for your brand? DM us</a></div>
 </div></section>
 
@@ -33,7 +43,11 @@
   <div>© 2026 Saurabh AI Creates · All videos are AI-generated</div>
 </div></footer>
 <a class="float-dm" href="https://ig.me/m/saurabh.aicreates" target="_blank" rel="noopener">📩 DM to Order</a>
-<script src="assets/js/videos.js"></script>
-<script>renderClients(document.getElementById('clientList'), document.getElementById('clientNav'));</script>
+<script src="assets/js/videos.js?v=14"></script>
+<script src="assets/js/reviews.js?v=2"></script>
+<script>
+renderClients(document.getElementById('clientList'), document.getElementById('clientNav'));
+renderReviewSlider(document.getElementById('clientReviews'), document.getElementById('clientReviewTrack'), document.getElementById('clientReviewDots'));
+</script>
 </body>
 </html>
