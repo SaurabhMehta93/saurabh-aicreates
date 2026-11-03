@@ -123,7 +123,8 @@
 
 <section id="invitation-video" class="home-invitation-section"><div class="wrap">
   <div class="sec-title"><span class="tag">Browse Our Designs</span><h2>Invitation Video Templates</h2><p>Explore all our invitation designs by category and preview each video.</p></div>
-  <iframe id="invitationGalleryFrame" class="invitation-gallery-frame" src="invitations.html?embed=1" title="Invitation video templates by category" loading="lazy"></iframe>
+  <div id="invitationPreview" class="invitation-preview"><p class="note">Loading featured invitations…</p></div>
+  <div class="btns invitation-more"><a class="btn btn-gold" href="invitations.html">View More Videos →</a></div>
 </div></section>
 
 <section id="rvWall" style="display:none"><div class="wrap">
@@ -140,12 +141,7 @@
 <script src="assets/js/videos.js"></script>
 <script>
 renderOurWork(document.getElementById('ourWork'));
-// Resize the embedded invitation gallery to its content height (same-origin iframe).
-window.addEventListener('message', event => {
-  if (event.origin !== window.location.origin || event.data?.type !== 'invitation-gallery-height') return;
-  const frame = document.getElementById('invitationGalleryFrame');
-  if (frame && Number.isFinite(event.data.height)) frame.style.height = Math.max(500, event.data.height) + 'px';
-});
+renderInvitationPreview(document.getElementById('invitationPreview'));
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
