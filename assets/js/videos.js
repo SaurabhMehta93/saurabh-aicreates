@@ -119,7 +119,8 @@
   };
   window.renderClients = async function (el, navEl) {
     const g = await listVideos();
-    const clients = Object.keys(g).filter(k => !OUR_WORK[k]).sort((a,b) => a.localeCompare(b));
+    const HIDDEN_CLIENTS = ['Shreeji']; // Temporarily hidden until more portfolio videos are added.
+    const clients = Object.keys(g).filter(k => !OUR_WORK[k] && !HIDDEN_CLIENTS.includes(k)).sort((a,b) => a.localeCompare(b));
     if (!clients.length) { el.innerHTML = '<p class="note">Client videos coming soon.</p>'; return; }
     const name = k => CLIENT_NAMES[k] || pretty(k);
     const id = k => 'c-' + k.toLowerCase().replace(/[^a-z0-9]+/g,'-');
